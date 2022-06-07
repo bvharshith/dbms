@@ -1,0 +1,16 @@
+create database INSURANCE1;
+use INSURANCE1;
+show tables;
+create table Person(driver_id varchar(20),name varchar(10),address varchar(50),PRIMARY KEY(driver_id));
+desc PERSON;
+create table CAR(Regno varchar(20),model varchar(20),year int,PRIMARY KEY(Regno));
+desc CAR;
+create table ACCIDENT(reportno int,date_accident date,location varchar(20),primary key(reportno));
+desc ACCIDENT;
+create table OWNS(driver_id varchar(20),Regno varchar(20),primary key(driver_id,Regno),foreign key(driver_id) references PERSON(driver_id),foreign key(Regno) references CAR(Regno));
+desc OWNS;
+create table PARTICIPATED(driver_id varchar(10),Regno varchar(10),reportno int,damage_amount int,primary key(driver_id,Regno,reportno),foreign key(driver_id) references PERSON(driver_id),foreign key(Regno) references CAR(Regno),foreign key(reportno) references ACCIDENT(reportno));
+desc Participated;
+insert into PERSON(driver_id,name,address) values("A01","RICHARD","SRINIVAS NAGAR"),("A02","PRADEEP","RAJAJINAGAR"),("A03","SMITH","ASHOKNAGAR"),("A04","VENU","N.R.COLONY"),("A05","JOHN","HANUMATH NAGAR");
+COMMIT;
+SELECT * FROM PERSON;
