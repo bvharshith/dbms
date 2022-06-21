@@ -1,0 +1,20 @@
+create database SUPPLIERS1;
+use SUPPLIERS1;
+ show tables;
+ create table SUPPLIERS1(SID int,SNAME varchar(20),CITY varchar(20),primary key(SID));
+desc SUPPLIERS1;
+create table PARTS(PID int,Pname varchar(20),Color varchar(10),primary key(PID));
+desc PARTS;
+create table CATALOG(SID int,PID int,Cost float(6),primary key(SID,PID),foreign key(SID) references SUPPLIERS1(SID),foreign key(PID) references PARTS(PID));
+desc CATALOG;
+insert into SUPPLIERS1(SID,SNAME,CITY) values("10001","ACME WIDGET","BANGALORE"),("10002","JOHNS","KOLKATA"),("10003","VIMAL","MUMBAI"),("10004","RELIANCE","DELHI"),("10005","MAHINDRA","MUMBAI");
+select * from SUPPLIERS1;
+commit;
+insert into PARTS(PID,Pname,Color) values("20001","BOOK","RED"),("20002","PEN","RED"),("20003","PENCIL","GREEN"),("20004","MOBILE","GREEN"),("20005","CHARGER","BLACK");
+select * from PARTS;
+commit;
+insert into CATALOG(SID,PID,Cost) values("10001","20001","10"),("10001","20002","10"),("10001","20003","30"),("10001","20004","10"),("10001","20005","10"),("10002","20001","10"),("10002","20002","20"),("10003","20003","30"),("10004","20003","40");
+select * from CATALOG;
+SELECT DISTINCT P.Pname from PARTS P, CATALOG C  where P.PID=C.PID;
+SELECT S.SNAME from SUPPLIERS1 S WHERE NOT EXISTS((SELECT P.PID from PARTS P) MINUS(SELECT C.PID from CATALOG C  where C.SID=S.SID));
+    
