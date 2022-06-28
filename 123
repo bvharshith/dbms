@@ -1,0 +1,62 @@
+create database SUPPLIERS2;
+use SUPPLIERS2;
+ show tables;
+ create table SUPPLIERS2(SID int,SNAME varchar(20),CITY varchar(20),primary key(SID));
+desc SUPPLIERS2;
+create table PARTS(PID int,Pname varchar(20),Color varchar(10),primary key(PID));
+desc PARTS;
+create table CATALOG(SID int,PID int,Cost float(6),primary key(SID,PID),foreign key(SID) references SUPPLIERS2(SID),foreign key(PID) references PARTS(PID));
+desc CATALOG;
+insert into SUPPLIERS2(SID,SNAME,CITY) values("10001","ACME WIDGET","BANGALORE"),("10002","JOHNS","KOLKATA"),("10003","VIMAL","MUMBAI"),("10004","RELIANCE","DELHI"),("10005","MAHINDRA","MUMBAI");
+select * from SUPPLIERS2;
+commit;
+insert into PARTS(PID,Pname,Color) values("20001","BOOK","RED"),("20002","PEN","RED"),("20003","PENCIL","GREEN"),("20004","MOBILE","GREEN"),("20005","CHARGER","BLACK");
+select * from PARTS;
+commit;
+insert into CATALOG(SID,PID,Cost) values("10001","20001","10"),("10001","20002","10"),("10001","20003","30"),("10001","20004","10"),("10001","20005","10"),("10002","20001","10"),("10002","20002","20"),("10003","20003","30"),("10004","20003","40");
+select * from CATALOG;
+SELECT DISTINCT P.Pname from PARTS P, CATALOG C  where P.PID=C.PID;
+SELECT S.SNAME
+FROM SUPPLIERS2 S
+WHERE NOT EXISTS (( SELECT P.PID
+FROM Parts P )
+EXCEPT
+( SELECT C.PID
+FROM Catalog C
+WHERE C.SID = S.SID ));
+SELECT S.SNAME
+FROM SUPPLIERS2 S
+WHERE NOT EXISTS (( SELECT P.PID
+FROM Parts P
+WHERE P.Color = ‘Red’ )
+EXCEPT
+( SELECT C.PID
+FROM CATALOG C, PARTS P
+WHERE C.SID = S.SID AND
+C.PID = P.PID AND P.Color = ‘Red’ ));
+ SELECT P.Pname
+FROM Parts P, CATALOG C, SUPPLIERS2 S
+WHERE P.PID = C.PID AND C.SID = S.SID
+AND S.Sname = "ACME WIDGET"
+AND NOT EXISTS ( SELECT *
+FROM Catalog C1, SUPPLIERS2 S1
+WHERE P.PID = C1.PID AND C1.SID = S1.SID AND
+S1.SNAME <> "ACME WIDGET" );
+SELECT DISTINCT C.sid
+FROM Catalog C
+64 Chapter 5
+WHERE C.cost > ( SELECT AVG (C1.cost)
+FROM Catalog C1
+WHERE C1.pid = C.pid )
+6. SELECT P.pid, S.sname
+FROM Parts P, Suppliers S, Catalog C
+WHERE C.pid = P.pid
+AND C.sid = S.sid
+AND C.cost = (SELECT MAX (C1.cost)
+FROM Catalog C1
+WHERE C1.pid = P.pid)
+7. SELECT DISTINCT C.sid
+FROM Catalog C
+WHERE NOT EXISTS ( SELECT *
+FROM Parts P
+WHERE P.pid = C.pid AND P.color <> ‘Red’ )
