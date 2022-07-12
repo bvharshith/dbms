@@ -43,19 +43,19 @@ foreign key (branch_name) references Branch(branch_name));
 insert into Loan values(1,"SBI_Chamrajpet",1000),(2,"SBI_ResidencyRoad",2000),(3,"SBI_ShivajiRoad",3000),(4,"SBI_ParliamentRoad",4000),(5,"SBI_Jantarmantar",5000);
 select * from Loan;
 commit;
- select C.customername from BankCustomer C 
+ select C.customername from Customer C 
  where exists ( 
  select D.customername, count(D.customername) 
- from depositer D, BankAccount BA where 
- D.accno = BA.accno AND C.customername = D.customername AND 
- BA.branchname = 'SBI_ResidencyRoad' group by D. customername having count(D.customername) >=2
+ from depositer D, Accounts A where 
+ D.accno = A.accno AND C.customername = D.customername AND 
+ BA.branchname = 'HDFC_Malleswaram' group by D. customername having count(D.customername) >=2
 ); 
 
-select BC.customername from BankCustomer BC where not exists(
-	select branchname from Branch where branchcity = 'Delhi'
-	except
+select C.customername from Customer C where not exists(
+	select branchname from Branch where branchcity = 'Hyderabad'
+	NOT IN
     select BA.branchname from Depositer D, BankAccount BA
 	where D.accno = BA.accno and BC.customername = D.customername
 );
 
-delete from BankAccount where branchname in( select branchname from Branch where branchcity = 'Bombay' );
+delete from BankAccount where branchname in( select branchname from Branch where branchcity = 'Chennai' );
